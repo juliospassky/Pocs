@@ -18,7 +18,7 @@ namespace ApplicationTests.AdapterInbound.Rest
             var result = actionResult.Result as OkObjectResult;
 
             // Assert
-            Assert.Equal("", result.Value);
+            Assert.NotNull(result);
         }
     }
 }

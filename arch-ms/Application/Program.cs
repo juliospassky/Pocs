@@ -1,4 +1,6 @@
 using Application.Configs;
+using Domain.Services;
+using Infrastructure.Database.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,8 @@ builder.Services
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.Configure<MongoDbConfig>(builder.Configuration.GetSection("MongoDb"));
+builder.Services.AddSingleton<TodoService>();
 
 var app = builder.Build();
 

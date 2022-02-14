@@ -8,6 +8,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B3CEA6D6-AA6E-42D5-8F38-D10DA8443416}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker-compose", "docker-compose", "{939A68CF-6D5C-4BAE-8630-90D3C9C8D520}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{84A1C16A-3EB0-4EED-8BA7-61D4F3FDBC5A}"
 EndProject
@@ -21,9 +24,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InfrastructureTests", "Infr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{97E41816-F003-421A-8DA8-E226B947F81F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{422CAB96-6A6D-4289-B138-016BC6A877F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{422CAB96-6A6D-4289-B138-016BC6A877F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonTests", "CommonTests\CommonTests.csproj", "{1F19ECBE-5DFB-4BE3-8EA4-5FEF90E5D706}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonTests", "CommonTests\CommonTests.csproj", "{1F19ECBE-5DFB-4BE3-8EA4-5FEF90E5D706}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

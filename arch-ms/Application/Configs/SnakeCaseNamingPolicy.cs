@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Application.Configs
 {
-  
+
     public class SnakeCaseNamingPolicy : JsonNamingPolicy
     {
         public static SnakeCaseNamingPolicy Instance { get; } = new SnakeCaseNamingPolicy();

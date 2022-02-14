@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
-using Microsoft.AspNetCore.Http;
+using Domain.Services;
+using Domain.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Application.AdapterInbound.Rest
@@ -8,16 +9,22 @@ namespace Application.AdapterInbound.Rest
     [ApiController]
     public class TodoController : ControllerBase
     {
+
         [HttpGet]
         public async Task<ActionResult<Todo>> Get()
         {
-            var todo = new Todo
-            {
-                Name = "Julio Oliveira",
-                Email = "juliocto2011@gmail.com"                
-            };
+            //await _service.Get
 
-            return Ok(todo);
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Todo>> PostTodo([FromServices] TodoService service, [FromBody] Todo todo)
+        {
+            todo.Audit = new Audit("Julio Oliveira");
+            await service.Create(todo);
+
+            return CreatedAtAction(nameof(PostTodo), todo);
         }
     }
 }
