@@ -1,0 +1,274 @@
+{
+	"info": {
+		"_postman_id": "6c3ddddc-f809-4e56-bada-84167b1e52b2",
+		"name": "Arch .Net",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "00 Todo",
+			"item": [
+				{
+					"name": "ARC000 - Post Todo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (responseCode.code === 201) {        \r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"    pm.environment.set(\"TodoId\", jsonData.id);    \r",
+									"\r",
+									"    pm.test(\"Response body contais name\", function () {\r",
+									"        pm.expect(jsonData.name).to.contains;\r",
+									"    });  \r",
+									"    \r",
+									"    pm.test(\"Response body contais email\", function () {\r",
+									"        pm.expect(jsonData.email).to.contains;\r",
+									"    });   \r",
+									"\r",
+									"    pm.test(\"Response body contais audit.created\", function () {\r",
+									"        pm.expect(jsonData.audit.created).to.contains;\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Response body contais audit.created_by\", function () {\r",
+									"        pm.expect(jsonData.audit.created_by).to.contains;\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Response body contais audit.last_modified\", function () {\r",
+									"        pm.expect(jsonData.audit.last_modified).to.contains;\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Response body contais audit.last_modified_by\", function () {\r",
+									"        pm.expect(jsonData.audit.last_modified_by).to.contains;\r",
+									"    });\r",
+									"\r",
+									"} else {\r",
+									"    pm.test(\"TODO\", function () {\r",
+									"        throw new Error(\"Response Code isn't 200\");\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Julio Oliveira\",\r\n    \"email\": \"juliocto2011@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5208/api/v1/Todo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5208",
+							"path": [
+								"api",
+								"v1",
+								"Todo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ARC001 - GetById Todo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (responseCode.code === 200) {\r",
+									"    const jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"    pm.test(\"Check id is correct: \" + pm.environment.get(\"TodoId\"), function () {\r",
+									"        pm.expect(jsonData.id).to.eql(pm.environment.get(\"TodoId\"));\r",
+									"    });\r",
+									"\r",
+									"      pm.test(\"Response body contais name\", function () {\r",
+									"        pm.expect(jsonData.name).to.contains;\r",
+									"    });  \r",
+									"    \r",
+									"    pm.test(\"Response body contais email\", function () {\r",
+									"        pm.expect(jsonData.email).to.contains;\r",
+									"    });   \r",
+									"\r",
+									"    pm.test(\"Response body contais audit.created\", function () {\r",
+									"        pm.expect(jsonData.audit.created).to.contains;\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Response body contais audit.created_by\", function () {\r",
+									"        pm.expect(jsonData.audit.created_by).to.contains;\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Response body contais audit.last_modified\", function () {\r",
+									"        pm.expect(jsonData.audit.last_modified).to.contains;\r",
+									"    });\r",
+									"\r",
+									"     pm.test(\"Response body contais audit.last_modified_by\", function () {\r",
+									"        pm.expect(jsonData.audit.last_modified_by).to.contains;\r",
+									"    });\r",
+									"    \r",
+									"} else {\r",
+									"       pm.test(\"Failed GET\", function () {\r",
+									"        throw new Error(\"Response Code isn't 200\");\r",
+									"    });\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5208/api/v1/Todo/{{TodoId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5208",
+							"path": [
+								"api",
+								"v1",
+								"Todo",
+								"{{TodoId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ARC002 - Get Query",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (responseCode.code === 200) {\r",
+									"    const jsonData = JSON.parse(responseBody);\r",
+									"    \r",
+									"    pm.test(\"Response body contais id\", function () {\r",
+									"        pm.expect(jsonData[0].id).to.contains;\r",
+									"    });  \r",
+									"\r",
+									"    pm.test(\"Response body contais name\", function () {\r",
+									"        pm.expect(jsonData[0].name).to.contains;\r",
+									"    });  \r",
+									"    \r",
+									"    pm.test(\"Response body contais email\", function () {\r",
+									"        pm.expect(jsonData[0].email).to.contains;\r",
+									"    });   \r",
+									"\r",
+									"    pm.test(\"Response body contais audit.created\", function () {\r",
+									"        pm.expect(jsonData[0].audit.created).to.contains;\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Response body contais audit.created_by\", function () {\r",
+									"        pm.expect(jsonData[0].audit.created_by).to.contains;\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Response body contais audit.last_modified\", function () {\r",
+									"        pm.expect(jsonData[0].audit.last_modified).to.contains;\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Response body contais audit.last_modified_by\", function () {\r",
+									"        pm.expect(jsonData[0].audit.last_modified_by).to.contains;\r",
+									"    });\r",
+									"    \r",
+									"} else {\r",
+									"       pm.test(\"Failed GET\", function () {\r",
+									"        throw new Error(\"Response Code isn't 200\");\r",
+									"    });\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5208/api/v1/Todo/query?SkipSize=0&LimitSize=20",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5208",
+							"path": [
+								"api",
+								"v1",
+								"Todo",
+								"query"
+							],
+							"query": [
+								{
+									"key": "SkipSize",
+									"value": "0"
+								},
+								{
+									"key": "LimitSize",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ARC003 - Delete Todo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (responseCode.code === 200) {\r",
+									"   pm.test(\"Check: id is deleted: \" + pm.environment.get(\"TodoId\"));\r",
+									"} else {\r",
+									"       pm.test(\"Failed delete\", function () {\r",
+									"        throw new Error(\"Response Code isn't 200\");\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5208/api/v1/Todo/{{TodoId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5208",
+							"path": [
+								"api",
+								"v1",
+								"Todo",
+								"{{TodoId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
