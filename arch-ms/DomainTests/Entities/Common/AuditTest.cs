@@ -10,7 +10,7 @@ namespace DomainTests.Entities.Common
         public void When_UpdateLastModified_Expect_ModifyUserAndDate()
         {
             //Arrange
-            Audit audit = new Audit() { CreatedBy = "Julio Oliveira", LastModifiedBy = "Julio Oliveira", Created = DateTime.Now, LastModified = DateTime.Now };
+            Audit audit = new Audit("Julio Oliveira");
 
             //Act
             audit.UpdateLastModified("Bruce Wayne");

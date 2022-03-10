@@ -1,11 +1,12 @@
 ﻿using Domain.Entities;
+using Domain.Services.Interfaces;
 using Infrastructure.Database.Config;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace Domain.Services
 {
-    public class TodoService
+    public class TodoService : ITodoService
     {
         private readonly IMongoCollection<Todo> _service;
         public TodoService(IOptions<MongoDbConfig> options)

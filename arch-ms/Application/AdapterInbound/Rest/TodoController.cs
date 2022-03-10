@@ -1,8 +1,9 @@
-﻿using Domain.Entities;
-using Domain.Services;
-using Domain.Common;
-using Microsoft.AspNetCore.Mvc;
+﻿using Domain.Common;
+using Domain.Entities;
 using Domain.Entities.Common;
+using Domain.Services;
+using Domain.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Application.AdapterInbound.Rest
 {
@@ -10,43 +11,50 @@ namespace Application.AdapterInbound.Rest
     [ApiController]
     public class TodoController : ControllerBase
     {
+        private readonly ITodoService _service;
+
+        public TodoController(ITodoService todoService)
+        {
+            _service = todoService;
+        }
+
         [HttpPost]
-        public async Task<ActionResult<Todo>> Post([FromServices] TodoService service, [FromBody] Todo todo)
+        public async Task<ActionResult<Todo>> Post([FromBody] Todo todo)
         {
             todo.Audit = new Audit("Julio Oliveira");
-            await service.Create(todo);
+            await _service.Create(todo);
 
             return CreatedAtAction(nameof(Post), todo);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Todo>> Get([FromServices] TodoService service, string id)
+        public async Task<ActionResult<Todo>> Get(string id)
         {
-            var todo = await service.GetById(id);
+            var todo = await _service.GetById(id);
 
             return Ok(todo);
         }
 
         [HttpGet("query")]
-        public async Task<ActionResult<Todo>> GetPages([FromServices] TodoService service, [FromQuery] FilterBase _filters)
+        public async Task<ActionResult<Todo>> GetPages([FromQuery] FilterBase _filters)
         {
-            var todos = await service.GetPages(_filters.SkipSize, _filters.LimitSize);
+            var todos = await _service.GetPages(_filters.SkipSize, _filters.LimitSize);
 
             return Ok(todos);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Todo>> Put([FromServices] TodoService service, [FromBody] Todo todo, string id)
+        public async Task<ActionResult<Todo>> Put([FromBody] Todo todo, string id)
         {
-            await service.Update(id, todo);
+            await _service.Update(id, todo);
 
             return Ok(todo);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromServices] TodoService service, string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            await service.Delete(id);
+            await _service.Delete(id);
 
             return Ok();
         }

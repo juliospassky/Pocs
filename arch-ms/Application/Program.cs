@@ -1,5 +1,6 @@
 using Application.Configs;
 using Domain.Services;
+using Domain.Services.Interfaces;
 using Infrastructure.Database.Config;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +18,7 @@ builder.Services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.Configure<MongoDbConfig>(builder.Configuration.GetSection("MongoDb"));
-builder.Services.AddSingleton<TodoService>();
+builder.Services.AddSingleton<ITodoService, TodoService>();
 
 var app = builder.Build();
 
