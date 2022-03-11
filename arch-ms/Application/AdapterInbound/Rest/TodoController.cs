@@ -1,4 +1,5 @@
-﻿using Domain.Common;
+﻿using Application.AdapterInbound.Contract.Request;
+using Domain.Common;
 using Domain.Entities;
 using Domain.Entities.Common;
 using Domain.Services;
@@ -19,12 +20,11 @@ namespace Application.AdapterInbound.Rest
         }
 
         [HttpPost]
-        public async Task<ActionResult<Todo>> Post([FromBody] Todo todo)
+        public async Task<ActionResult<Todo>> Post([FromBody] TodoRequest todoRequest)
         {
-            todo.Audit = new Audit("Julio Oliveira");
-            await _service.Create(todo);
+            await _service.Create(new Todo());
 
-            return CreatedAtAction(nameof(Post), todo);
+            return CreatedAtAction(nameof(Post), todoRequest);
         }
 
         [HttpGet("{id}")]
