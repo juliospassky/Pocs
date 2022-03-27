@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  webui:
+    image: ${DOCKER_REGISTRY-}application
+    build:
+      context: .
+      dockerfile: Application/Dockerfile    
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    depends_on:
+      - mongodb
+    restart: on-failure
+  
+  mongodb:
+    image: mongo:3
+    ports:
+      - 27017:27017
+  
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
