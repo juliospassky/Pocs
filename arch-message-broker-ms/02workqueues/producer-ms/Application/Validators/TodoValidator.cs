@@ -9,7 +9,6 @@ namespace Application.Validators
         {
             RuleFor(o => o.Name)
                 .NotEmpty()
-                .Matches("^[a-zA-Z0-9 ]*$")
                 .WithMessage("Nome com problema");
 
             RuleFor(o => o.Email)
