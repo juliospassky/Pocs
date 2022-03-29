@@ -26,22 +26,21 @@ namespace Application.Adapter.Amqp.OutBound
         {
             var todo = _mapper.Map<Todo>(todoRequest);
             todo.SearchId = Guid.NewGuid();
-            using (var connection = _connFactory.CreateConnection())
+
+            var factory = new ConnectionFactory() { HostName = "localhost" };
+            using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queue: "hello",
-                                     durable: false,
-                                     exclusive: false,
-                                     autoDelete: false,
-                                     arguments: null);
+                channel.ExchangeDeclare(exchange: "logs", type: ExchangeType.Fanout);
 
-
-                var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(todo));
-
-                channel.BasicPublish(exchange: "",
-                                     routingKey: "hello",
+                var message = todo.Name;
+                var body = Encoding.UTF8.GetBytes(message);
+                channel.BasicPublish(exchange: "logs",
+                                     routingKey: "",
                                      basicProperties: null,
                                      body: body);
+
+                Console.WriteLine(" [x] Sent {0}", message);
             }
 
             return _mapper.Map<TodoResponse>(todo);

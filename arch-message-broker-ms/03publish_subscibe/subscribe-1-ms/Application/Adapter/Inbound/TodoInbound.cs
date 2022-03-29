@@ -15,23 +15,27 @@ namespace Application.Adapter.Inbound
             var connection = factory.CreateConnection();
             var channel = connection.CreateModel();
 
-            channel.QueueDeclare(queue: "hello",
-                                 durable: false,
-                                 exclusive: false,
-                                 autoDelete: false,
-                                 arguments: null);
+
+            channel.ExchangeDeclare(exchange: "logs", type: ExchangeType.Fanout);
+
+            var queueName = channel.QueueDeclare().QueueName;
+            channel.QueueBind(queue: queueName,
+                              exchange: "logs",
+                              routingKey: "");
+
+            Console.WriteLine(" [*] Waiting for logs.");
 
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += (model, ea) =>
             {
                 var body = ea.Body.ToArray();
-                var messageTodo = JsonConvert.DeserializeObject<Todo>(Encoding.UTF8.GetString(body));
+                var message = Encoding.UTF8.GetString(body);
+                Console.WriteLine(" [x] {0}", message);
             };
-            channel.BasicConsume(queue: "hello",
+            channel.BasicConsume(queue: queueName,
                                  autoAck: true,
                                  consumer: consumer);
-
-
+                       
             while (!stoppingToken.IsCancellationRequested)
             {
                 await Task.Delay(1000, stoppingToken);
