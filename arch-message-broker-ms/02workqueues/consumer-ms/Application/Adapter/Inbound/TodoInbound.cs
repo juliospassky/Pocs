@@ -13,12 +13,14 @@ namespace Application.Adapter.Inbound
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
             var connection = factory.CreateConnection();
-            var channel1 = CreateChannel(connection);
-            var channel2 = CreateChannel(connection);
+            var channel = CreateChannel(connection);
             var queueName = "task_queue";
 
-            BuildAndRunWorker(channel1, queueName, "Produtor A");
-            BuildAndRunWorker(channel2, queueName, "Produtor B");
+            channel.BasicQos(0,2,false);
+
+            BuildAndRunWorker(channel, queueName, "Consumer A");
+            BuildAndRunWorker(channel, queueName, "Consumer B");
+            BuildAndRunWorker(channel, queueName, "Consumer C");
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -27,7 +29,7 @@ namespace Application.Adapter.Inbound
 
         }
 
-        private void BuildAndRunWorker(IModel channel, string queueName, string productoName)
+        private void BuildAndRunWorker(IModel channel, string queueName, string workerName)
         {
             channel.QueueDeclare(queue: queueName,
                                  durable: false,
@@ -40,7 +42,7 @@ namespace Application.Adapter.Inbound
             {
                 var body = ea.Body.ToArray();
                 var messageTodo = JsonConvert.DeserializeObject<Todo>(Encoding.UTF8.GetString(body));
-                Console.WriteLine($" {productoName} Received {0}", messageTodo);
+                Console.WriteLine($" {workerName} Received {0}", messageTodo);
                 int dots = messageTodo.Name.Split('.').Length - 1;
 
                 Thread.Sleep(dots * 1000);
