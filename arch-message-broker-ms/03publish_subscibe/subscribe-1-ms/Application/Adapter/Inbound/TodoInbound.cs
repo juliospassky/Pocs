@@ -16,9 +16,16 @@ namespace Application.Adapter.Inbound
             var channel = connection.CreateModel();
 
 
-            channel.ExchangeDeclare(exchange: "logs", type: ExchangeType.Fanout);
+            channel.ExchangeDeclare(exchange: "logs", type: ExchangeType.Fanout, durable: false, autoDelete: false);
 
-            var queueName = channel.QueueDeclare().QueueName;
+            var queueName = "q.subscribe1";
+
+            channel.QueueDeclare(queue: queueName,
+                                 durable: false,
+                                 exclusive: false,
+                                 autoDelete: false,
+                                 arguments: null);
+
             channel.QueueBind(queue: queueName,
                               exchange: "logs",
                               routingKey: "");
@@ -35,7 +42,7 @@ namespace Application.Adapter.Inbound
             channel.BasicConsume(queue: queueName,
                                  autoAck: true,
                                  consumer: consumer);
-                       
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 await Task.Delay(1000, stoppingToken);
