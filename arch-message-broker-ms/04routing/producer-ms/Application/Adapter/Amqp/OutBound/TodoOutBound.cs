@@ -26,22 +26,35 @@ namespace Application.Adapter.Amqp.OutBound
         {
             var todo = _mapper.Map<Todo>(todoRequest);
             todo.SearchId = Guid.NewGuid();
-            using (var connection = _connFactory.CreateConnection())
+            var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(todo));
+
+            var factory = new ConnectionFactory() { HostName = "localhost" };
+            using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queue: "hello",
-                                     durable: false,
-                                     exclusive: false,
-                                     autoDelete: false,
-                                     arguments: null);
+                channel.ExchangeDeclare(exchange: "direct_logs", type: "direct");
 
+                var severity = new List<string>() { "error", "info", "warning" };
+                var message = new List<string>() { "error - erro desconhecido ex", "info - registro atualizado", "warning - falha ao logar no sistema" };
 
-                var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(todo));
-
-                channel.BasicPublish(exchange: "",
-                                     routingKey: "hello",
+                for (int i = 0; i < severity.Count; i++)
+                {
+                    channel.BasicPublish(exchange: "direct_logs",
+                                     routingKey: severity[i],
                                      basicProperties: null,
-                                     body: body);
+                                     body: Encoding.UTF8.GetBytes(message[i]));
+
+                    Console.WriteLine("direct_logs - [x] Sent '{0}':'{1}'", severity[i], message[i]);
+                }
+
+                channel.BasicPublish(exchange: "errror_logs",
+                                  routingKey: severity[0],
+                                  basicProperties: null,
+                                  body: body);
+
+                Console.WriteLine("errror_logs - [x] Sent '{0}':'{1}'", severity[0], message[0]);
+
+
             }
 
             return _mapper.Map<TodoResponse>(todo);
